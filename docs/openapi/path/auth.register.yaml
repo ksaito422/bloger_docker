@@ -1,0 +1,43 @@
+post:
+  operationId: post-auth-register
+  summary: 新規登録
+  tags: [auth]
+
+  security:
+    - bearerAuth: []
+
+  requestBody:
+    description: ユーザー名
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              example: テスト太郎
+
+  responses:
+    "201":
+      description: OK
+      content:
+        application/json:
+          schema:
+            properties:
+              id:
+                type: uuid
+              name:
+                type: string
+
+          example:
+            id: fjkfjkif-8383-43kjk
+            name: テスト太郎
+
+    "403":
+      $ref: "../response/Error403.yaml"
+
+    "422":
+      $ref: "../response/Error422.yaml"
+
+    "429":
+      $ref: "../response/Error429.yaml"

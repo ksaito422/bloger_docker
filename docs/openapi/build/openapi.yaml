@@ -1,0 +1,503 @@
+openapi: 3.0.0
+info:
+  title: Zenn Clone API
+  description: Zennっぽい記事投稿サイトのAPI
+  version: '1.0'
+servers:
+  - url: 'http://localhost:4100/api/v1'
+    description: 開発用APIモック
+  - url: 'http://localhost:8000/api/v1'
+    description: ローカル環境
+tags:
+  - name: top
+    description: トップページ用
+  - name: auth
+    description: 認証
+  - name: user
+    description: 利用者
+  - name: article
+    description: 記事
+paths:
+  /top:
+    get:
+      operationId: top
+      summary: トップページ表示用
+      tags:
+        - top
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: 403 Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+        '429':
+          description: 429 Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+  /auth/login:
+    post:
+      operationId: post-auth-login
+      summary: ログイン
+      tags:
+        - auth
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: uuid
+                  name:
+                    type: string
+              example:
+                id: fjkfjkif-8383-43kjk
+                name: テスト太郎
+        '401':
+          description: 401 Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+        '422':
+          description: 422 Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+  /auth/register:
+    post:
+      operationId: post-auth-register
+      summary: 新規登録
+      tags:
+        - auth
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: ユーザー名
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: テスト太郎
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: uuid
+                  name:
+                    type: string
+              example:
+                id: fjkfjkif-8383-43kjk
+                name: テスト太郎
+        '403':
+          description: 403 Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+        '422':
+          description: 422 Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+        '429':
+          description: 429 Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+  /auth/unregister:
+    delete:
+      operationId: post-auth-unregister
+      summary: 退会
+      tags:
+        - auth
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: 403 Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+        '429':
+          description: 429 Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+  '/users/{userId}':
+    get:
+      operationId: get-user
+      summary: 利用者情報取得
+      tags:
+        - user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  name:
+                    type: string
+                  email:
+                    type: string
+              example:
+                name: テスト太郎
+                email: test@example.com
+        '403':
+          description: 403 Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+        '429':
+          description: 429 Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+  '/users/{userId}/articles':
+    get:
+      operationId: get-user-article
+      summary: 利用者投稿記事取得
+      tags:
+        - user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                properties:
+                  title:
+                    type: string
+                  content:
+                    type: string
+              example:
+                - id: 1
+                  title: テスト01
+                  content: 記事の内容が入ります。記事の内容が入ります。記事の内容が入ります。
+                - id: 2
+                  title: テスト02
+                  content: 記事の内容が入ります。記事の内容が入ります。記事の内容が入ります。
+                - id: 3
+                  title: テスト03
+                  content: 記事の内容が入ります。記事の内容が入ります。記事の内容が入ります。
+        '403':
+          description: 403 Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+        '429':
+          description: 429 Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+  /articles:
+    get:
+      operationId: get-article
+      summary: 全記事取得
+      tags:
+        - article
+      description: 全記事取得
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+              example:
+                - id: 1
+                  title: テスト01
+                  content: 記事の内容が入ります。記事の内容が入ります。記事の内容が入ります。
+                - id: 2
+                  title: テスト02
+                  content: 記事の内容が入ります。記事の内容が入ります。記事の内容が入ります。
+                - id: 3
+                  title: テスト03
+                  content: 記事の内容が入ります。記事の内容が入ります。記事の内容が入ります。
+        '403':
+          description: 403 Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+        '429':
+          description: 429 Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+    post:
+      operationId: post-article
+      summary: 記事投稿
+      tags:
+        - article
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: 記事内容投稿
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: テスト01
+                content:
+                  type: string
+                  example: テストテストテスト
+      responses:
+        '201':
+          description: OK
+        '403':
+          description: 403 Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+        '422':
+          description: 422 Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+        '429':
+          description: 429 Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+  '/articles/{articleId}':
+    get:
+      operationId: get-article-detail
+      summary: 記事詳細取得
+      tags:
+        - article
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: uuid
+                  title:
+                    type: string
+                  content:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: uuid
+              example:
+                id: 1
+                title: テスト01
+                content: 記事の内容が入ります。記事の内容が入ります。記事の内容が入ります。
+                user:
+                  id: 1
+        '403':
+          description: 403 Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+        '404':
+          description: 404 Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+        '429':
+          description: 429 Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+    put:
+      operationId: put-article
+      summary: 記事編集
+      tags:
+        - article
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: 記事内容編集
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: テスト01
+                content:
+                  type: string
+                  example: テストテストテスト
+      responses:
+        '204':
+          description: OK
+        '403':
+          description: 403 Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+        '422':
+          description: 422 Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+        '429':
+          description: 429 Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+    delete:
+      operationId: delete-article
+      summary: 記事削除
+      tags:
+        - article
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: OK
+        '403':
+          description: 403 Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+        '422':
+          description: 422 Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+        '429':
+          description: 429 Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
