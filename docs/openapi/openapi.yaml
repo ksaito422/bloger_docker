@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  title: Zenn Clone API
-  description: Zennっぽい記事投稿サイトのAPI
+  title: Blog Clone API
+  description: Blog投稿サイトっぽいやつのAPI
   version: "1.0"
 servers:
   - url: "http://localhost:4100/api/v1"
